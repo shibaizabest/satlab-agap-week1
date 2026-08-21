@@ -3,10 +3,13 @@
 
 \usepackage[utf8]{vietnam}
 
-\title{Airport Gate Assignment Problems}
-\subtitle{Báo cáo đọc hiểu - Tuần 1}
-\author{Họ và tên}
-\institute{AGAP Lab}
+\title{Bài toán gán cổng sân bay}
+\subtitle{}
+\author{Lưu Quang Thịnh}
+\institute{
+SATLab - UET\\
+GV: ThS. Kiều Văn Tuyên
+}
 \date{\today}
 
 \begin{document}
@@ -15,18 +18,539 @@
   \titlepage
 \end{frame}
 
-\begin{frame}{Mục lục}
-  \tableofcontents
+
+\begin{frame}[t]{Bài toán gán cổng hàng không (GAP)}
+
+\footnotesize
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.52\textwidth}
+
+\begin{block}{Bối cảnh vận hành}
+Cổng là nguồn lực \alert{khan hiếm và đắt đỏ}. Lưu lượng lớn,
+chậm chuyến và thay đổi lịch bay làm gia tăng ùn tắc tại cổng,
+sân đỗ và đường lăn.
+\end{block}
+
+\begin{block}{Bài toán GAP}
+Phân mỗi tàu bay vào một \textbf{cổng} hoặc \textbf{sân đỗ}
+trong khoảng thời gian khai thác, bảo đảm:
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \item Không có hai tàu bay dùng cùng cổng cùng lúc;
+    \item Tương thích kích thước tàu bay--cổng;
+    \item Có thời gian đệm để hấp thụ chậm chuyến.
+\end{itemize}
+\end{block}
+
+\end{column}
+\begin{column}{0.44\textwidth}
+
+\begin{alertblock}{Cổng tiếp xúc (Contact gate)}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \item Sát nhà ga, thường có cầu ống lồng;
+    \item Hành khách đi trực tiếp giữa nhà ga và máy bay;
+    \item Thuận tiện nhưng số lượng hữu hạn.
+\end{itemize}
+\end{alertblock}
+
+\begin{exampleblock}{Cổng xa (Remote gate)}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \item Vị trí đỗ tại sân đỗ (apron);
+    \item Hành khách di chuyển bằng xe buýt;
+    \item Linh hoạt khi thiếu cổng tiếp xúc, nhưng tăng thời gian chờ.
+\end{itemize}
+\end{exampleblock}
+
+\end{column}
+\end{columns}
+
+\vspace{-2.0ex}
+\begin{block}{Mục tiêu}
+Cân bằng dịch vụ hành khách và hiệu quả khai thác; một mục tiêu phổ biến
+là giảm số chuyến phải dùng cổng xa/sân đỗ.
+\end{block}
+
+\vfill
+\tiny Nguồn: Da\c{s}, Gzara và St\"utzle (2020), Mục~1--3.
+
 \end{frame}
 
-\section{Tổng quan bài toán}
-\begin{frame}{Tổng quan bài toán gán cổng}
-  % Điền nội dung ở đây
+\begin{frame}[t]{Các ràng buộc kỹ thuật và bối cảnh điều hành}
+
+\footnotesize
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.48\textwidth}
+
+\begin{block}{1. Ràng buộc thời gian giãn cách}
+Mỗi cổng chỉ phục vụ một tàu bay tại một thời điểm. Nếu tàu bay $i$
+khai thác trước $j$ tại cùng cổng, cần thỏa:
+\[
+    d_i + b_{ij} \leq a_j,
+\]
+trong đó $a_j$, $d_i$ là thời điểm đến/đi; $b_{ij}$ là thời gian đệm
+cho phục vụ mặt đất và hấp thụ chậm chuyến.
+\end{block}
+
+\begin{alertblock}{2. Tương thích kích thước}
+\begin{itemize}
+    \setlength{\itemsep}{2pt}
+    \item Cổng phải phù hợp với loại và kích thước tàu bay;
+    \item Tàu bay nhỏ có thể dùng cổng lớn, chiều ngược lại không được;
+    \item Một số cổng lớn có thể chia thành hai vị trí đỗ nhỏ.
+\end{itemize}
+\end{alertblock}
+
+\end{column}
+\begin{column}{0.48\textwidth}
+
+\begin{block}{3. Điều hành tĩnh (offline planning)}
+Lập kế hoạch trước ngày khai thác từ lịch bay dự kiến. Thời điểm đến,
+đi và nhu cầu cổng được xem là đã biết; mục tiêu là tạo phương án
+phân cổng hiệu quả và có thời gian đệm.
+\end{block}
+
+\begin{exampleblock}{4. Khôi phục theo thời gian thực}
+Khi chậm chuyến, đổi tàu bay hoặc xung đột cổng xảy ra, hệ thống cập
+nhật phương án theo thời gian thực. Ưu tiên là giảm chậm trễ, giảm số
+lần đổi cổng và hạn chế đưa chuyến bay ra sân đỗ xa.
+\end{exampleblock}
+
+\centering
+\small
+\textbf{Kế hoạch tĩnh} $\longrightarrow$ \alert{Gián đoạn} $\longrightarrow$
+\textbf{Khôi phục}
+
+\end{column}
+\end{columns}
+
+\vfill
+\tiny Nguồn: Da\c{s}, Gzara và St\"utzle (2020), Mục~1--2 và 3.3.
+
 \end{frame}
 
-\section{Mô hình hóa}
-\begin{frame}{Mô hình toán học}
-  % Điền nội dung ở đây
+\begin{frame}[t]{Mô hình hóa toán học bài toán gán cổng}
+\scriptsize
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\setlength{\abovedisplayshortskip}{1pt}
+\setlength{\belowdisplayshortskip}{1pt}
+{\tiny\textbf{Ký hiệu:} $F$ -- tàu bay; $K=\{1,\ldots,m\}$ -- cổng;
+$r$ -- sân đỗ xa; $K^+=K\cup\{r\}$; $x_{ik}=1$ nếu $i$ gán cho $k$.
+Sắp chuyến theo $a_i$: $L(i)=\{j\mid d_j\geq a_i,\ j=1,\ldots,i-1\}$.}\par
+\vspace{-0.8ex}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.48\textwidth}
+\begin{block}{1. Quy hoạch số nguyên (IP)}
+\[
+\begin{aligned}
+\min\quad & \sum_{i\in F}x_{ir}\\[-0.45ex]
+\text{s.t.}\quad
+&\sum_{k\in K^+}x_{ik}=1 &&\forall i\in F,\\[-0.45ex]
+&\sum_{j\in L(i)}x_{jk}+x_{ik}\leq1 &&\forall i\in F,\ k\in K.
+\end{aligned}
+\]
+{\tiny $x_{ik}\in\{0,1\}$ ($i\in F,k\in K^+$). Bổ sung tương thích:
+$x_{ik}\leq q_{ik}$ ($i\in F,k\in K$).}
+\end{block}
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\begin{block}{2. Hàm mục tiêu hành khách bậc hai}
+\[
+\begin{aligned}
+\min\quad
+&\sum_{i,j\in F}\sum_{k,l\in K^+}
+p_{ij}D_{kl}x_{ik}x_{jl}\\[-0.45ex]
+&+\sum_{i\in F}\sum_{k\in K^+}
+\bigl(p_{oi}D_{ok}+p_{ie}D_{ke}\bigr)x_{ik}.
+\end{aligned}
+\]
+$p_{ij}$: khách nối chuyến; $o,e$: điểm vào/ra nhà ga, tách biệt với sân đỗ $r$.
+\end{block}
+\end{column}
+\end{columns}
+
+\vspace{-1.2ex}
+\begin{block}{3. Mô hình đồ thị (luồng)}
+$G=(F\cup\{s,t\},A)$, $(i,j)\in A$ khi $j$ có thể theo ngay sau $i$
+(chẳng hạn $d_i+b_{ij}\leq a_j$ nếu dùng thời gian đệm);
+$y_{ijk}=1$ nếu $j$ được phục vụ ngay sau $i$ tại cổng $k$.
+{\tiny
+\[
+\begin{aligned}
+\sum_{h\in F\cup\{s\}}y_{hik}&=\sum_{h\in F\cup\{t\}}y_{ihk}
+&&\forall i\in F,\ k\in K,\\[-0.45ex]
+\sum_{j\in F}y_{sjk}&=\sum_{i\in F}y_{itk}=1\ (\forall k\in K),\qquad
+\sum_{k\in K}\sum_{h\in F\cup\{t\}}y_{ihk}\leq1\ (\forall i\in F),\quad y_{ijk}\in\{0,1\}.
+\end{aligned}
+\]
+}
+\end{block}
+
+\vspace{-0.8ex}
+\vfill
+\tiny Da\c{s} et al. (2020), Mục~2, (1)--(13); $q_{ik}$ và cách cụ thể hóa buffer là phần bổ sung.
 \end{frame}
 
+\begin{frame}[t]{Ba nhóm mục tiêu tạo ra các đánh đổi trực tiếp}
+
+\footnotesize
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.315\textwidth}
+\begin{block}{Trải nghiệm hành khách}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \item Giảm tổng hoặc trung bình quãng đường đi bộ;
+    \item Giảm thời gian chờ, trung chuyển và nguy cơ lỡ nối chuyến;
+    \item Giảm bất tiện và quãng đường vận chuyển hành lý.
+\end{itemize}
+\end{block}
+\end{column}
+
+\begin{column}{0.315\textwidth}
+\begin{alertblock}{Chi phí sân bay và hãng bay}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \item Giảm số chuyến ở sân đỗ xa/không được gán cổng;
+    \item Giảm chờ cổng, chậm chuyến và thời gian lăn;
+    \item Giảm lượt/chi phí kéo dắt và nhiên liệu khi lăn;
+    \item Tăng mức phù hợp tàu bay--cổng.
+\end{itemize}
+\end{alertblock}
+\end{column}
+
+\begin{column}{0.315\textwidth}
+\begin{exampleblock}{Độ ổn định lịch trình}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \item Tạo thời gian đệm giữa hai lượt dùng cổng;
+    \item Giảm số lượng, thời lượng và chi phí xung đột cổng kỳ vọng;
+    \item Hạn chế lan truyền chậm chuyến;
+    \item Giảm độ lệch khi tái gán so với lịch tham chiếu.
+\end{itemize}
+\end{exampleblock}
+\end{column}
+\end{columns}
+
+\vspace{-0.6ex}
+\begin{block}{Đánh đổi cốt lõi}
+Minh họa: tăng thời gian đệm làm lịch vững hơn nhưng giảm mức sử dụng cổng.
+Vì mục tiêu của hành khách, hãng bay và sân bay không đồng nhất, cần biểu diễn rõ các phương án thỏa hiệp.
+\end{block}
+
+\vfill
+\tiny Nguồn: Da\c{s}, Gzara và St\"utzle (2020), Mục~3.1--3.3, Bảng~2--4.
+\end{frame}
+
+\begin{frame}[t]{Đơn mục tiêu dễ triển khai nhưng bỏ sót đánh đổi}
+
+\footnotesize
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.47\textwidth}
+\begin{block}{Tiếp cận đơn mục tiêu}
+\[
+    \min_{x\in X} f(x)
+\]
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \item Một tiêu chí ưu tiên; thường chọn một phương án tối ưu cuối cùng;
+    \item Dễ mô hình hóa, hiệu chỉnh và tận dụng bộ giải chuẩn;
+    \item Phù hợp khi chính sách vận hành đã xác định rõ ưu tiên;
+    \item Có thể cải thiện một bên nhưng chuyển chi phí sang bên khác.
+\end{itemize}
+\end{block}
+\end{column}
+
+\begin{column}{0.49\textwidth}
+\begin{alertblock}{Tiếp cận đa mục tiêu}
+\[
+    \min_{x\in X}F(x)=\bigl(f_1(x),\ldots,f_R(x)\bigr)
+\]
+{\scriptsize Các mục tiêu cực đại hóa được quy đổi về cùng chiều cực tiểu hóa.}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \item Mục tiêu lý thuyết là tập nghiệm không bị trội;
+    \item Làm rõ đánh đổi giữa hành khách, khai thác và khả năng phục hồi;
+    \item Với cách a posteriori, nhà điều hành chọn sau khi xem biên Pareto;
+    \item Tùy phương pháp, có thể cần giải lặp và/hoặc biểu đạt ưu tiên.
+\end{itemize}
+\end{alertblock}
+\end{column}
+\end{columns}
+
+\vspace{-0.6ex}
+\begin{exampleblock}{Vì sao thực tế cần đa mục tiêu?}
+GAP có nhiều bên liên quan và các mục tiêu xung đột ngay trong cùng một bên.
+Một giá trị mục tiêu duy nhất có thể che khuất phương án thỏa hiệp phù hợp hơn.
+\end{exampleblock}
+
+\vspace{-0.7ex}
+\vfill
+\tiny Nguồn: Da\c{s}, Gzara và St\"utzle (2020), Mục~1, 3.4 và 4.1.
+\end{frame}
+
+\begin{frame}[t]{Mỗi kỹ thuật đa mục tiêu phù hợp một kiểu ưu tiên}
+
+\footnotesize
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.49\textwidth}
+\begin{block}{Weighted Sum -- ưu tiên biết trước}
+\[
+    \min_{x\in X}\sum_{r=1}^{R}w_r\widehat f_r(x),
+    \qquad w_r>0,\quad \sum_r w_r=1.
+\]
+$\widehat f_r$ là mục tiêu đã chuẩn hóa. Cách này đơn giản nhưng nhạy với thang đo,
+bỏ sót nghiệm Pareto non-supported và có thể phủ biên không đều.
+\end{block}
+
+\begin{block}{$\varepsilon$-Constraint -- kiểm soát ngưỡng}
+\[
+    \min f_1(x)\quad
+    \text{s.t. } f_r(x)\leq\varepsilon_r,\ r=2,\ldots,R.
+\]
+Có thể thu được nghiệm Pareto không được hỗ trợ; cần chọn lưới $\varepsilon$
+và giải lặp nhiều bài toán.
+\end{block}
+\end{column}
+
+\begin{column}{0.49\textwidth}
+\begin{alertblock}{Lexicographic -- bổ sung ngoài review}
+Tối ưu mục tiêu quan trọng nhất trước; sau đó tối ưu mục tiêu kế tiếp
+mà không làm xấu mức đã đạt. Dễ giải thích khi có quy tắc điều hành rõ,
+nhưng phụ thuộc mạnh vào thứ tự ưu tiên.
+\end{alertblock}
+
+\begin{exampleblock}{Thuật toán Pareto -- ưu tiên chọn sau}
+Bài review ghi nhận Pareto SA, Pareto Local Search và NSGA-II cho GAP;
+SPEA2 chỉ được nêu như một thuật toán phổ biến nói chung. Các metaheuristic này
+xấp xỉ biên, không bảo đảm tìm toàn bộ tập Pareto.
+\end{exampleblock}
+\end{column}
+\end{columns}
+
+\vspace{0.1ex}
+\tiny Nguồn chính: Da\c{s} et al. (2020), Mục~4.1, Bảng~6--7.
+Nguồn bổ sung Lexicographic cho GAP: Karsu, Azizo\u{g}lu và Alanl\i{} (2021), Omega 103, 102422.
+\end{frame}
+
+\begin{frame}[t]{Phương pháp chính xác: giá trị tham chiếu và giới hạn quy mô}
+
+\footnotesize
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.47\textwidth}
+\begin{block}{Các hướng được ghi nhận trong review}
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \item Một số mục tiêu bậc hai được tuyến tính hóa để giải chính xác;
+    \item Branch-and-bound/Simplex đã được dùng cho bài đơn mục tiêu;
+    \item Column generation, dynamic programming và network flow khai thác cấu trúc bài toán;
+    \item Phương pháp chính xác đa mục tiêu còn rất hiếm.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Vai trò phương pháp luận}
+Nghiệm tối ưu và cận chứng minh được trên bài nhỏ tạo tập tham chiếu,
+đồng thời giúp đánh giá chất lượng heuristic.
+\end{exampleblock}
+\end{column}
+
+\begin{column}{0.49\textwidth}
+\begin{alertblock}{Rào cản tính toán}
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \item Một biến thể AGAP phân cấp được Karsu et al. (2021) xác định là strongly NP-hard;
+    \item Số biến gán tăng theo số chuyến $\times$ số cổng;
+    \item Xung đột thời gian và mục tiêu bậc hai tạo nhiều liên kết cặp;
+    \item Kịch bản trễ và ràng buộc thực tế làm mô hình phình nhanh;
+    \item Tìm toàn bộ tập Pareto rất tốn tính toán, kể cả với metaheuristic.
+\end{itemize}
+\end{alertblock}
+
+\begin{block}{Đánh giá định tính}
+Thiếu benchmark chuẩn cản trở so sánh hệ thống giữa các mô hình và phương pháp giải.
+Decomposition/heuristic/thuật toán lai là hướng mở rộng quy mô được suy ra.
+\end{block}
+\end{column}
+\end{columns}
+
+\vspace{-0.7ex}
+\vfill
+\tiny Da\c{s} et al. (2020), Mục~4--5; NP-hard: Karsu et al. (2021), Omega 103, 102422.
+\end{frame}
+
+\begin{frame}[t]{Metaheuristics và cấu trúc lai mở rộng khả năng tìm kiếm}
+
+\footnotesize
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.48\textwidth}
+\begin{block}{Bốn họ thuật toán phổ biến}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \item \textbf{GA:} quần thể, lai ghép và đột biến; khám phá rộng nhưng cần mã hóa và sửa nghiệm khả thi;
+    \item \textbf{SA:} chấp nhận tạm thời bước đi xấu để thoát cực trị địa phương; nhạy với lịch làm nguội;
+    \item \textbf{TS:} dùng bộ nhớ tabu với các phép Insert, Exchange và Interval Exchange; mạnh ở tìm kiếm lân cận;
+    \item \textbf{Ant System/ant-based:} xây nghiệm theo pheromone; linh hoạt nhưng cần hiệu chỉnh hội tụ.
+\end{itemize}
+\end{block}
+
+\begin{alertblock}{Vì sao phù hợp với GAP?}
+Tìm nghiệm tốt trong thời gian ngắn cho hàm mục tiêu bậc hai,
+nhiều mục tiêu và không gian nghiệm rất lớn.
+\end{alertblock}
+\end{column}
+
+\begin{column}{0.50\textwidth}
+\begin{exampleblock}{Các phương pháp và cấu trúc lai}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \item Greedy tạo nghiệm đầu cho TS và SA;
+    \item Memetic Algorithm kết hợp tiến hóa và cải thiện cục bộ;
+    \item Two-Phase Local Search: Weighted Sum trước, Pareto Local Search sau;
+    \item MIP-based heuristic và Adaptive Large Neighborhood Search;
+    \item Hệ chuyên gia kết hợp mô hình tối ưu cho xử lý tình huống thực tế.
+\end{itemize}
+\end{exampleblock}
+
+\begin{block}{Kiến trúc đề xuất}
+MIP tạo cận và nghiệm hạt giống; tìm kiếm lân cận chuyên biệt mở rộng quy mô;
+cơ chế Pareto duy trì nhiều phương án đánh đổi.
+\end{block}
+\end{column}
+\end{columns}
+
+\vfill
+\tiny Nguồn: Da\c{s}, Gzara và St\"utzle (2020), Mục~4.1--4.3, Bảng~6--7.
+\end{frame}
+
+\begin{frame}[t]{Dữ liệu mở và chỉ số Pareto quyết định khả năng so sánh}
+
+\footnotesize
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.47\textwidth}
+\begin{alertblock}{Hiện trạng benchmark trong tổng quan}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \item Chưa có bộ test chuẩn dùng chung;
+    \item Một số nghiên cứu chỉ công bố đặc tính phân phối, không công bố instance;
+    \item Dữ liệu chuyến bay thực tế thường không được chia sẻ;
+    \item Vì vậy khó tái lập và so sánh mô hình, thuật toán một cách hệ thống.
+\end{itemize}
+\end{alertblock}
+
+\begin{block}{Đề xuất thiết kế benchmark}
+Lịch đến/đi và phân phối trễ; loại tàu bay; tương thích cổng;
+luồng khách nối chuyến; khoảng cách đi bộ/lăn; chi phí kéo dắt;
+lịch tham chiếu và các kịch bản gián đoạn.
+\end{block}
+\end{column}
+
+\begin{column}{0.49\textwidth}
+\begin{block}{Đo chất lượng tập Pareto}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \item \textbf{HV $\uparrow$:} thể tích vùng mục tiêu bị tập xấp xỉ trội, giới hạn bởi điểm tham chiếu;
+    \item \textbf{GD $\downarrow$:} khoảng cách trung bình từ tập xấp xỉ đến biên Pareto tham chiếu;
+    \item \textbf{IGD $\downarrow$:} khoảng cách từ biên tham chiếu đến tập xấp xỉ, phản ánh cả hội tụ và độ phủ.
+\end{itemize}
+{\scriptsize So sánh HV phải dùng cùng chuẩn hóa và điểm tham chiếu. GD/IGD cần tập tham chiếu đáng tin cậy; nếu dùng front gộp best-known phải công bố cách dựng.}
+\end{block}
+
+\begin{exampleblock}{Giao thức đánh giá tối thiểu}
+Báo cáo thời gian chạy, tỷ lệ khả thi, gap so với cận chứng minh/best-known,
+khả năng phục hồi dưới kịch bản trễ, trung bình và độ lệch chuẩn qua nhiều lần chạy.
+\end{exampleblock}
+\end{column}
+\end{columns}
+
+\vfill
+\tiny Da\c{s} et al. (2020), Mục~5. Bổ sung: Zitzler--Thiele (1999);
+Van Veldhuizen--Lamont (1998); Coello--Cruz Cort\'es (2005).
+\end{frame}
+
+\begin{frame}[t]{Sáu khoảng trống đang cản trở tiến bộ có thể kiểm chứng}
+
+\footnotesize
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.49\textwidth}
+\begin{block}{1. Chưa có mô hình chuẩn chung}
+Khác biệt về bên liên quan, ràng buộc và mục tiêu dẫn đến nhiều biến thể khó đối chiếu.
+\end{block}
+
+\begin{block}{2. Góc nhìn nhà khai thác còn mờ nhạt}
+Trong nhóm mục tiêu sân bay/hãng bay, chỉ ít mục tiêu phản ánh trực tiếp lợi ích của nhà khai thác sân bay.
+\end{block}
+
+\begin{alertblock}{3. Ít phương pháp chính xác đa mục tiêu}
+Rất ít, nếu có, phương pháp chính xác; việc tìm toàn bộ tập Pareto có chi phí tính toán cao.
+\end{alertblock}
+\end{column}
+
+\begin{column}{0.49\textwidth}
+\begin{alertblock}{4. Phụ thuộc quá mức vào Weighted Sum}
+Cách này bỏ sót nghiệm Pareto non-supported, nhạy với thang đo và thường phủ biên không đều.
+\end{alertblock}
+
+\begin{block}{5. Thiếu benchmark chuẩn và dữ liệu mở}
+Bộ dữ liệu tổng hợp và dữ liệu thực không được chia sẻ đầy đủ, cản trở tái lập và so sánh công bằng.
+\end{block}
+
+\begin{exampleblock}{6. Tối ưu tích hợp còn hiếm}
+Mới chỉ vài nghiên cứu ghép GAP với gán xe buýt, lập lịch taxiway hoặc bài toán aircraft taxi.
+\end{exampleblock}
+\end{column}
+\end{columns}
+
+\vspace{0.2ex}
+\centering
+\small
+\textbf{Khoảng trống lõi:} \alert{chuẩn hóa} $\rightarrow$ \alert{Pareto}
+$\rightarrow$ \alert{dữ liệu} $\rightarrow$ \alert{tích hợp vận hành}
+
+\vfill
+\tiny Nguồn: Da\c{s}, Gzara và St\"utzle (2020), Mục~5; hạn chế Weighted Sum ở Mục~4.1.
+\end{frame}
+
+\begin{frame}[t]{Đề xuất của nhóm: GAP đa mục tiêu có khả năng phục hồi}
+
+\footnotesize
+\textbf{Câu hỏi nghiên cứu:} Liệu khung lai $\varepsilon$-Constraint--ALNS có thể tạo
+tập Pareto tốt cho GAP có khả năng phục hồi ở quy mô khai thác thực tế?
+\vspace{0.4ex}
+
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.48\textwidth}
+\begin{alertblock}{Mô hình và phương pháp}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \item Bốn mục tiêu: hành khách; chi phí vận hành tổng hợp; rủi ro xung đột; độ lệch lịch;
+    \item Kịch bản trễ lịch sử và ba hành động phục hồi: chờ, tái gán hoặc chuyển apron;
+    \item MIP $\varepsilon$-Constraint cho bài nhỏ; branch-and-price/decomposition khi mở rộng;
+    \item Pareto ALNS hoặc Pareto Local Search cho bài lớn, có thể kết hợp rolling horizon.
+\end{itemize}
+\end{alertblock}
+\end{column}
+
+\begin{column}{0.50\textwidth}
+\begin{exampleblock}{Thiết kế thực nghiệm và đóng góp}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \item Công bố benchmark tổng hợp và dữ liệu thực đã ẩn danh;
+    \item So sánh với Weighted Sum, NSGA-II/PLS và MIP tham chiếu;
+    \item Đo HV/GD/IGD với tham chiếu chung; thời gian chạy; gap theo cận; độ vững dưới nhiễu;
+    \item Phân tích thành phần (ablation) cho cơ chế phá--sửa, khởi tạo chính xác và mô hình phục hồi.
+\end{itemize}
+\end{exampleblock}
+\end{column}
+\end{columns}
+
+\vspace{0.2ex}
+\textbf{Lộ trình:} rà soát hệ thống 2020--2026 trước khi chốt tính mới;
+hội nghị tập trung thuật toán + benchmark, tạp chí mở rộng tích hợp, bất định và tình huống thực.
+
+\vfill
+\tiny Đề xuất của nhóm, suy ra từ: G.S. Da\c{s}, F. Gzara, T. St\"utzle (2020),
+``A review on airport gate assignment problems'', Omega 92, 102146, doi:10.1016/j.omega.2019.102146.
+\end{frame}
 \end{document}
